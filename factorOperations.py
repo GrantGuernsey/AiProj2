@@ -100,10 +100,27 @@ def joinFactors(factors: List[Factor]):
                     "Input factors: \n" +
                     "\n".join(map(str, factors)))
 
+    if not factors:
+        return None
+        # Calculate the set of unconditioned variables and conditioned variables for the join
+    unconditioned = set(functools.reduce(lambda x, y: x | y, [set(factor.unconditionedVariables()) for factor in factors]))
+    conditioned = set(functools.reduce(lambda x, y: x | y, [set(factor.conditionedVariables()) for factor in factors])) - unconditioned
 
-    "*** YOUR CODE HERE ***"
-    raiseNotDefined()
-    "*** END YOUR CODE HERE ***"
+    variable_domains_dicts = [factor.variableDomainsDict() for factor in factors]
+    variable_domains_dict = variable_domains_dicts[0]
+
+    new_factor = Factor(unconditioned, conditioned, variable_domains_dict)
+
+    for assignment in new_factor.getAllPossibleAssignmentDicts():
+        probability = 1
+
+        for factor in factors:
+            probability *= factor.getProbability(assignment)
+
+        new_factor.setProbability(assignment, probability)
+
+    return new_factor
+    
 
 ########### ########### ###########
 ########### QUESTION 3  ###########
