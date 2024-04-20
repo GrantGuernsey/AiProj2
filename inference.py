@@ -382,7 +382,7 @@ class DiscreteDistribution(dict):
             if randomPercent < runningSum + prob  and randomPercent >= runningSum:
                 return key
             else:
-                runningSum += + prob
+                runningSum += prob
 
         return None
 
